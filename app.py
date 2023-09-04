@@ -12,7 +12,7 @@ from PIL import Image, PngImagePlugin
 
 app = Flask(__name__)
 CORS(app)
-URL = 'https://464d9ef8f4677c49a6.gradio.live'
+URL = 'https://0a83fc42adf22bf0db.gradio.live'
 
 # Load environment variables
 PROJECT_ID = os.environ.get('PROJECT_ID')
@@ -23,7 +23,7 @@ CLIENT_ID = os.environ.get('CLIENT_ID')
 AUTH_URI = os.environ.get('AUTH_URI')
 TOKEN_URI = os.environ.get('TOKEN_URI')
 AUTH_PROVIDER_CERT_URL = os.environ.get('AUTH_PROVIDER_CERT_URL')
-CLIENT_CERT_URL = os.environ.get('CLIENT_CERT_URL')
+CLIENT_CERT_URL = os.environ.get(' ')
 
 # Create the credentials object
 cred = credentials.Certificate({
@@ -59,13 +59,16 @@ def generate_images():
     if not prompts2:
         return jsonify({"error": "No prompts provided."}), 400
 
-    prompts = [prompt + ', wikihow illustration' for prompt in prompts2]
+    prompts = [prompt + '<lora:watercolor_v1_sdxl:1>' for prompt in prompts2]
     image_urls = []
 
     for index, prompt in enumerate(prompts):
         payload = {
             "prompt": prompt,
-            "steps": 15,
+            "negative_prompt": "cartoon, cgi, render, illustration, painting, drawing, bad quality, grainy, low resolution",
+            "steps": 20,
+            "cfg_scale": 7,
+            "sampling_method": "DPM++ 2M Karras",
             "width": "768",
             "height": "512"
         }
